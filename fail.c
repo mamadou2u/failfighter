@@ -6,10 +6,8 @@
 
 
 
-
-int forward=0;
-
-
+int combol;
+int forward,i;
 SDL_Rect ap1 , rcsprite ;
 int main ( int argc, char *argv[] )
 {
@@ -45,14 +43,15 @@ int main ( int argc, char *argv[] )
   
   /*character animation*/
   
-  ap1.x = 0  ;
-  ap1.y = 40 ;
+  ap1.x = 10  ;
+  ap1.y = 210 ;
   ap1.h = pusize_haut;
   ap1.w = pusize_larg;
   
   SDL_Event event;
-  int gameover = 0;
 
+  int gameover = 0;
+  
   /* message pump */
   while (!gameover)
   {
@@ -61,33 +60,33 @@ int main ( int argc, char *argv[] )
       /* an event was found */
       switch (event.type) {
         /* close button clicked */
-        case SDL_QUIT:
-          gameover = 1;
-          break;
-
+      case SDL_QUIT:
+	gameover = 1;
+	break;
+	
+      case SDL_KEYUP:
+	ap1.x = 10  ;
+	ap1.y = 210 ;
+	break;
         /* handle the keyboard */
-        case SDL_KEYDOWN:
+      case SDL_KEYDOWN:
           switch (event.key.keysym.sym) {
 	  case SDLK_ESCAPE:
+	    break;
 	  case SDLK_RIGHT:
-      
 	    ap1.x = 360;
 	    ap1.y = 40;
-	    if (ap1.x > 5 * 110 ){
-	      ap1.x = 3 * 110;
-	    }
 	    rcsprite.x = rcsprite.x +  vit;
-	   
-	   
 	    break;
 	  case SDLK_LEFT:
-	    forward=1;
-	   
-	      ap1.x = 480;
-	      ap1.y = 30 ;
-	      rcsprite.x = rcsprite.x - vit ;
+	    ap1.x = 480;
+	    ap1.y = 30 ;
+	    rcsprite.x = rcsprite.x - vit ;
 	    break;
-	  
+	  case SDLK_b:
+	    ap1.x = 580 ;
+	    ap1.y = 710 ;
+	    break;
 	    
 	      
             case SDLK_q:
@@ -96,10 +95,6 @@ int main ( int argc, char *argv[] )
           }
           break;
       }
-      if ( ap1.x == 480 )
-	{
-	  ap1.x = 0;
-	}
     }
     
 
