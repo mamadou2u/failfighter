@@ -5,8 +5,8 @@
 #include "time.h"
 
 double hadx ;
-int forward,hadoken,kick;
-SDL_Rect ap1 , rcsprite , hadok[5], rchadok;
+int forward,kick,uppercut;
+SDL_Rect ap1 , rcsprite , hadok[5], rchadok,left,rcleft,right,rcright,rcfor,forw,upper,rcupper,kick[2],rckick,;
 void setframeshadok()
 {
   int i ;
@@ -35,20 +35,50 @@ int main ( int argc, char *argv[] )
   screen = SDL_SetVideoMode(1047, 480, 0, 0);
   
   /* setup sprite colorkey and turn on RLE */
-  colorkey = SDL_MapRGB(screen->format, 189 , 206 , 136);
+  colorkey = SDL_MapRGB(screen->format, 255 , 255 , 255);
   /* load bitmap to temp surface */
   temp = SDL_LoadBMP("index.bmp");
   SDL_Surface* bg = SDL_DisplayFormat(temp);
   SDL_FreeSurface(temp);
 	
   /* load sprite */
-  temp   = SDL_LoadBMP("ryu.bmp");
+  temp   = SDL_LoadBMP("perso/static.bmp");
   sprite = SDL_DisplayFormat(temp);
   SDL_SetColorKey(sprite, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
-  /* load special power*/
-  temp   = SDL_LoadBMP("hadoken.bmp");
-  pow = SDL_DisplayFormat(temp);
+  /* character movements*/
+  temp   = SDL_LoadBMP("perso/jump.bmp");
+  mov0  = SDL_DisplayFormat(temp);
+  SDL_SetColorKey(sprite, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_FreeSurface(temp);
+  // avancer
+  temp   = SDL_LoadBMP("perso/avancer.bmp");
+  mov1  = SDL_DisplayFormat(temp);
+  SDL_SetColorKey(sprite, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_FreeSurface(temp);
+  // kick
+  temp   = SDL_LoadBMP("perso/kick.bmp");
+  mov2  = SDL_DisplayFormat(temp);
+  SDL_SetColorKey(sprite, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_FreeSurface(temp);
+  // left
+  temp   = SDL_LoadBMP("perso/left.bmp");
+  mov3  = SDL_DisplayFormat(temp);
+  SDL_SetColorKey(sprite, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_FreeSurface(temp);
+  // right
+  temp   = SDL_LoadBMP("perso/right.bmp");
+  mov4  = SDL_DisplayFormat(temp);
+  SDL_SetColorKey(sprite, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_FreeSurface(temp);
+  // uppercut
+  temp   = SDL_LoadBMP("perso/uppercut.bmp");
+  mov5  = SDL_DisplayFormat(temp);
+  SDL_SetColorKey(sprite, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_FreeSurface(temp);
+  // crouch
+  temp   = SDL_LoadBMP("perso/bas.bmp");
+  mov6  = SDL_DisplayFormat(temp);
   SDL_SetColorKey(sprite, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   /*charcater position*/
@@ -58,9 +88,6 @@ int main ( int argc, char *argv[] )
   
   /*character animation*/
   ;
-
-  rchadok.x = 0;
-  rchadok.y = 0;
   
   ap1.x = 0  ;
   ap1.y = 0 ;
@@ -68,7 +95,7 @@ int main ( int argc, char *argv[] )
   ap1.w = pusize_larg;
   
   SDL_Event event;
-  setframeshadok();
+  // setframeshadok();
   int gameover = 0;
   
   /* message pump */
