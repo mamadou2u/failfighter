@@ -1,29 +1,19 @@
 #include "SDL.h"
-#define pusize_haut 160
+#define pusize_haut 100
 #define pusize_larg 90
 #define vit 50
 #include "time.h"
 
 double hadx ;
-int forward,kick,uppercut;
-SDL_Rect ap1 , rcsprite , hadok[5], rchadok,left,rcleft,right,rcright,rcfor,forw,upper,rcupper,kick[2],rckick,;
-void setframeshadok()
-{
-  int i ;
-  for (i=0;i=4;i++)
-    {
-      hadok[i].x += 90 ;
-      hadok[i].y = 0;
-      hadok[i].h = pusize_haut;
-      hadok[i].w = pusize_larg;
-    }
-}
+int forward,kicks,uppercut,croush,jum,ri,le;
+SDL_Rect ap1 , rcsprite ,left,rcleft,right,rcright,rcfor,forw[3],upper[2],rcupper,kick[2],rckick,jump,rcjump,bas,rcbas;
+
 
 	  
   
 int main ( int argc, char *argv[] )
 {
-  SDL_Surface *sprite , *temp , *screen, *pow;
+  SDL_Surface *sprite , *temp , *screen, *pow, *mov0,*mov1,*mov2,*mov3,*mov4,*mov5,*mov6;
   int colorkey;
   /* initialize SDL */
   SDL_Init(SDL_INIT_VIDEO);
@@ -49,45 +39,75 @@ int main ( int argc, char *argv[] )
   /* character movements*/
   temp   = SDL_LoadBMP("perso/jump.bmp");
   mov0  = SDL_DisplayFormat(temp);
-  SDL_SetColorKey(sprite, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_SetColorKey(mov0, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // avancer
   temp   = SDL_LoadBMP("perso/avancer.bmp");
   mov1  = SDL_DisplayFormat(temp);
-  SDL_SetColorKey(sprite, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_SetColorKey(mov1, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // kick
   temp   = SDL_LoadBMP("perso/kick.bmp");
   mov2  = SDL_DisplayFormat(temp);
-  SDL_SetColorKey(sprite, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_SetColorKey(mov2, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // left
   temp   = SDL_LoadBMP("perso/left.bmp");
   mov3  = SDL_DisplayFormat(temp);
-  SDL_SetColorKey(sprite, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_SetColorKey(mov3, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // right
   temp   = SDL_LoadBMP("perso/right.bmp");
   mov4  = SDL_DisplayFormat(temp);
-  SDL_SetColorKey(sprite, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_SetColorKey(mov4, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // uppercut
   temp   = SDL_LoadBMP("perso/uppercut.bmp");
   mov5  = SDL_DisplayFormat(temp);
-  SDL_SetColorKey(sprite, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_SetColorKey(mov5, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // crouch
   temp   = SDL_LoadBMP("perso/bas.bmp");
   mov6  = SDL_DisplayFormat(temp);
-  SDL_SetColorKey(sprite, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_SetColorKey(mov6, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   /*charcater position*/
-  
+ 
   rcsprite.x = 150 ;	
   rcsprite.y = 300 ;
+  rckick.x=rcsprite.x;
+  rckick.y=rcsprite.y;
+  rcleft.x=rcsprite.x;
+  rcleft.y=rcsprite.y;
+  rcright.x=rcsprite.x;
+  rcright.y=rcsprite.y;
+  rcbas.x=rcsprite.x;
+  rcbas.y=rcsprite.y;
+  rcupper.x=rcsprite.x;
+  rcupper.y=rcsprite.y;
+  rcfor.x=rcsprite.x;
+  rcfor.y=rcsprite.y;
   
   /*character animation*/
-  ;
+  left.x = 0 ;
+  left.y = 0 ;
+  left.h =pusize_haut;
+  left.w =pusize_larg ;
+  
+  right.x = 0;
+  right.y= 0;
+  right.h=pusize_haut;
+  right.w=pusize_larg;
+ 
+  jump.x= 0;
+  jump.y= 0;
+  jump.h=pusize_haut;
+  jump.w=pusize_larg;
+
+  bas.x= 0;
+  bas.y= 0;
+  bas.h=pusize_haut;
+  bas.w=pusize_larg;
   
   ap1.x = 0  ;
   ap1.y = 0 ;
@@ -111,10 +131,6 @@ int main ( int argc, char *argv[] )
 	break;
 	
       case SDL_KEYUP:
-	if (rcsprite.y == 270)
-	  {
-	    rcsprite.y = 300;
-	  }
 	ap1.x = 0  ;
 	ap1.y = 0 ;
 	break;
@@ -124,8 +140,8 @@ int main ( int argc, char *argv[] )
 	  case SDLK_ESCAPE:
 	    break;
 	  case SDLK_DOWN:
-	    ap1.x = 95 ;
-	    ap1.y = 309 ;
+	    
+	    croush = 1;
 	    break;
 	  case SDLK_RIGHT:
 	    ap1.x = 348;
@@ -145,10 +161,10 @@ int main ( int argc, char *argv[] )
 	    ap1.y = 799 ;
 	    break;
 	  case SDLK_z:
-	    kick = 1;
+	    kicks = 1;
 	    break;
 	  case SDLK_r:
-	    hadoken = 1;
+	
 	    break;
 	  case SDLK_b:
 	    ap1.x = 171 ;
@@ -161,19 +177,25 @@ int main ( int argc, char *argv[] )
           break;
 
       }
+      
     }
-     if (kick == 1)
-      {
-	int frame = 0;
-	SDL_BlitSurface( pow ,&hadok[frame] , screen, &rchadok );
-	if (frame == 4 )
-	  kick = 0;
-	frame++;
-	}
+   
+    
     
     /* draw the background */
+    
     SDL_BlitSurface(bg, NULL, screen, NULL);
+
+    if (croush ==1)
+	{
+	  SDL_BlitSurface(mov0, &bas , screen, &rcbas );
+	  croush = 0;
+	  
+	}
+    else
     SDL_BlitSurface(sprite, &ap1 , screen, &rcsprite );
+    
+	
     
     /* update the screen */
     SDL_UpdateRect(screen, 0, 0, 0, 0);
