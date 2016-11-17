@@ -1,14 +1,34 @@
+
 #include "SDL.h"
 #define pusize_haut 100
 #define pusize_larg 90
 #define vit 50
 #include "time.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#define Sleep(n) usleep(n)
 
+SDL_TimerID timer;
 double hadx ;
 int forward,kicks,uppercut,croush,jum,ri,le;
-SDL_Rect ap1 , rcsprite ,left,rcleft,right,rcright,rcfor,forw[3],upper[2],rcupper,kick[2],rckick,jump,rcjump,bas,rcbas;
+SDL_Rect ap1 , rcsprite ,left,rcleft,right,rcright,rcfor,forw[3],upper[1],rcupper,kick[2],rckick,jump,rcjump,bas,rcbas;
 
-
+void setforward()
+{
+  forw[0].x = 0;
+  forw[0].y = 0;
+  forw[0].h = pusize_haut;
+  forw[0].w =  90;
+  forw[1].x = 94;
+  forw[1].y = 5;
+  forw[1].h = pusize_haut;
+  forw[1].w =  pusize_larg;
+  forw[2].x = 157;
+  forw[2].y = 5;
+  forw[2].h = pusize_haut;
+  forw[2].w =  pusize_larg;
+}
 	  
   
 int main ( int argc, char *argv[] )
@@ -19,7 +39,7 @@ int main ( int argc, char *argv[] )
   SDL_Init(SDL_INIT_VIDEO);
 
   /* set the title bar */
-  SDL_WM_SetCaption("SDL Test", "SDL Test");
+  SDL_WM_SetCaption("fail fighter", "fail fighter");
 
   /* create window */
   screen = SDL_SetVideoMode(1047, 480, 0, 0);
@@ -27,7 +47,7 @@ int main ( int argc, char *argv[] )
   /* setup sprite colorkey and turn on RLE */
   colorkey = SDL_MapRGB(screen->format, 255 , 255 , 255);
   /* load bitmap to temp surface */
-  temp = SDL_LoadBMP("index.bmp");
+  temp = SDL_LoadBMP("mission1.bmp");
   SDL_Surface* bg = SDL_DisplayFormat(temp);
   SDL_FreeSurface(temp);
 	
@@ -115,7 +135,8 @@ int main ( int argc, char *argv[] )
   ap1.w = pusize_larg;
   
   SDL_Event event;
-  // setframeshadok();
+  SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
+  setforward();
   int gameover = 0;
   
   /* message pump */
@@ -131,6 +152,11 @@ int main ( int argc, char *argv[] )
 	break;
 	
       case SDL_KEYUP:
+	SDL_Delay(20);
+	forward = 0;
+	croush=0;
+	le = 0;
+	ri = 0;
 	ap1.x = 0  ;
 	ap1.y = 0 ;
 	break;
@@ -144,8 +170,7 @@ int main ( int argc, char *argv[] )
 	    croush = 1;
 	    break;
 	  case SDLK_RIGHT:
-	    ap1.x = 348;
-	    ap1.y = 163;
+	    forward = 1;
 	    rcsprite.x = rcsprite.x +  vit;
 	    break;
 	  case SDLK_LEFT:
@@ -154,14 +179,12 @@ int main ( int argc, char *argv[] )
 	    rcsprite.x = rcsprite.x - vit ;
 	    break;
 	  case SDLK_UP:
-	    rcsprite.y = 270;
 	    break;
 	  case SDLK_a:
-	    ap1.x = 100 ;
-	    ap1.y = 799 ;
+	    le = 1;
 	    break;
 	  case SDLK_z:
-	    kicks = 1;
+	    ri = 1;
 	    break;
 	  case SDLK_r:
 	
@@ -188,10 +211,40 @@ int main ( int argc, char *argv[] )
 
     if (croush ==1)
 	{
-	  SDL_BlitSurface(mov0, &bas , screen, &rcbas );
-	  croush = 0;
-	  
+	  rcbas.x=rcsprite.x;
+	  rcbas.y=rcsprite.y;
+	  SDL_BlitSurface(mov6, &bas , screen, &rcbas );	  
 	}
+    else if (le == 1)
+      {
+        rcleft.x=rcsprite.x;
+	rcleft.y=rcsprite.y;
+	SDL_BlitSurface(mov3, &left , screen, &rcleft );
+      }
+    else if (ri == 1 )
+      {
+	rcright.x=rcsprite.x;
+	rcright.y=rcsprite.y;
+	SDL_BlitSurface(mov4, &left , screen, &rcleft );
+      }
+    else if (forward ==1)
+      {
+	int frames;
+	frames = 0;
+	rcfor.x=rcsprite.x;
+	rcfor.y=rcsprite.y;
+	SDL_BlitSurface(mov1, &forw[frames] , screen, &rcfor );
+	while ( frames <= 2)
+	  {
+	    frames++;
+	  }
+	if (frames == 2)
+	  {
+	    frames =0 ;
+	  }
+
+      }
+	
     else
     SDL_BlitSurface(sprite, &ap1 , screen, &rcsprite );
     
