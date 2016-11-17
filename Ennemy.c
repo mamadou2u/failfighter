@@ -1,22 +1,14 @@
 #include "SDL.h"
-#define esize_haut 90
+#define esize_haut 200
 #define esize_larg 55
+#define nbr_anim 8
+#define temps_anim
 #define vit 50
 #include "time.h"
 
 SDL_Rect ap1 , rcsprite,rcennemy, rects[8];
 int i,frame=0;
-void setennemy(SDL_Rect *ap1)
-{
 
-  for(i=0;i<8;i++)
-    {
-      ap1[i].x=ap1[i-1].x + esize_larg;
-      ap1[i].y=0;
-      ap1[i].w=esize_larg;
-      ap1[i].h=esize_haut;
-    }
-}
 int main ( int argc, char *argv[] )
 {
   SDL_Surface *sprite , *temp , *screen, *pow, *e1, *e2, *e3;
@@ -51,18 +43,12 @@ int main ( int argc, char *argv[] )
   /*character animation*/
 
   ap1.x = 0 ;
-  ap1.y = 0 ;
+  ap1.y = 8*esize_larg ;
   ap1.h = esize_haut;
   ap1.w = esize_larg;
   
   SDL_Event event;
   int gameover = 0;
-  setennemy(rects);
-  frame++;
-  if (frame==7)
-    {
-      frame=1;
-    }
   /* message pump */
   while (!gameover)
   {
@@ -88,19 +74,27 @@ int main ( int argc, char *argv[] )
           switch (event.key.keysym.sym) {
 	  case SDLK_ESCAPE:
 	    break;
-	  case SDLK_DOWN:
-	    ap1.x = 95 ;
-	    ap1.y = 309 ;
-	    break;
 	  case SDLK_RIGHT:
-	    ap1.x = 348;
-	    ap1.y = 163;
-	    rcsprite.x = rcsprite.x +  vit;
-
+	    if ( ap1.x ==0 )
+	      ap1.x = ap1.x+esize_haut; 
+	    else{
+	      if(ap1.x=200)
+		{
+		  ap1.x = ap1.x+esize_haut;
+		}
+	      else {
+		if ( ap1.x=400)
+		  ap1.x = ap1.x+esize_haut;
+	      }
+	    }
+	    rcsprite.x = rcsprite.x + vit ;
 	    break;
 	  case SDLK_LEFT:
-	    ap1.x = 85;
-	    ap1.y = 157 ;
+	    if ( ap1.x == 8*esize_haut )
+	      ap1.x = 8*esize_haut; 
+	    else{
+	      ap1.x = ap1.x+esize_haut;   
+	    }
 	    rcsprite.x = rcsprite.x - vit ;
 	    break;
 	  case SDLK_UP:
@@ -109,6 +103,7 @@ int main ( int argc, char *argv[] )
             case SDLK_q:
               gameover = 1;
 	    break;
+	    
           }
           break;
 
