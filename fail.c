@@ -8,12 +8,13 @@
 #define Sleep(n) usleep(n)
 #define pusize_haut 100
 #define pusize_larg 90
+#include <math.h>
 
 SDL_TimerID timer;
-double sprx,spry ;
+double sprx,spry,distance,d,f,dx,df ;
 int forward,kicks,uppercut,croush,jum,ri,le,frames=0;
 
-SDL_Rect ap1 , rcsprite ,left,rcleft,right,rcright,rcfor,forw[3],forwr[3],upperr[2],upper[2],rcupper,kick[2],rckick,jump,rcjump,bas,rcbas,rcupperr,rckickr,kickr[2],rcforr,rightr,rcrightr,leftr,rcleftr,basr,rcbasr,apr,rcspriter;
+SDL_Rect ap1 , rcsprite ,left,rcleft,right,rcright,rcfor,forw[3],forwr[3],upperr[2],upper[2],rcupper,kick[2],rckick,jump,rcjump,bas,rcbas,rcupperr,rckickr,kickr[2],rcforr,rightr,rcrightr,leftr,rcleftr,basr,rcbasr,apr,rcspriter,foe,rcfoe;
 struct personnage 
 {
   int pdv;
@@ -26,7 +27,7 @@ struct personnage
 struct enemis
 {
 	int pdv;
-};
+}enn;
 
 
 
@@ -110,7 +111,7 @@ void setupperr()
   
 int main ( int argc, char *argv[] )
 {
-  SDL_Surface *sprite , *temp , *screen, *pow, *mov0,*mov1,*mov2,*mov3,*mov4,*mov5,*mov6, *movr0,*movr1,*movr2,*movr3,*movr4,*movr5,*movr6,*spriter;
+  SDL_Surface *sprite , *temp , *screen, *pow, *mov0,*mov1,*mov2,*mov3,*mov4,*mov5,*mov6, *movr0,*movr1,*movr2,*movr3,*movr4,*movr5,*movr6,*spriter,*enemis;
   int colorkey;
   /* initialize SDL */
   SDL_Init(SDL_INIT_VIDEO);
@@ -127,7 +128,11 @@ int main ( int argc, char *argv[] )
   temp = SDL_LoadBMP("mission1.bmp");
   SDL_Surface* bg = SDL_DisplayFormat(temp);
   SDL_FreeSurface(temp);
-	
+  /* load enemy */
+  temp   = SDL_LoadBMP("persods.bmp");
+  enemis = SDL_DisplayFormat(temp);
+  SDL_SetColorKey(enemis, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_FreeSurface(temp);
   /* load sprite */
   temp   = SDL_LoadBMP("perso/static.bmp");
   sprite = SDL_DisplayFormat(temp);
@@ -226,8 +231,15 @@ int main ( int argc, char *argv[] )
   rcfor.y=rcsprite.y;
   rcspriter.x=rcsprite.x;
   rcspriter.y=rcsprite.y;
-  
+  rcfoe.x = 800;
+  rcfoe.y = 300;
   /*character animation*/
+
+  foe.x = 0;
+  foe.y = 0;
+  foe.h = 200;
+  foe.w = 150 ;
+  
   left.x = 0 ;
   left.y = 0 ;
   left.h =pusize_haut;
@@ -287,6 +299,7 @@ int main ( int argc, char *argv[] )
   setforwardr();
   setkickr();
   setupperr();
+  enn.pdv = 100;
   int gameover = 0;
   /* message pump */
   while (!gameover)
@@ -358,6 +371,9 @@ int main ( int argc, char *argv[] )
     SDL_BlitSurface(bg, NULL, screen, NULL);
     if (pers.right == 1)
       {
+	d = rcfoe.x - rcsprite.x;
+	f = rcfoe.y - rcsprite.y; 
+	distance = sqrt(d*d + f*f);
 	if (croush ==1)
 	  {
 	    rcbas.x=rcsprite.x;
@@ -422,6 +438,9 @@ int main ( int argc, char *argv[] )
       }
     if (pers.left == 1)
       {
+	d = rcfoe.x - rcspriter.x;
+	f = rcfoe.y - rcspriter.y; 
+	distance = sqrt(d*d + f*f);
 	if (croush == 1)
 	  {
 	    rcbasr.x=rcspriter.x;
@@ -458,7 +477,7 @@ int main ( int argc, char *argv[] )
 	  {
 	    rckickr.x=rcsprite.x;
 	    rckickr.y=rcsprite.y;
-	    SDL_BlitSurface(movr2, &kickr[frames] , screen, &rckickr );
+	    SDL_BlitSurface(movr2, &kickr[frames] , screen, &rcspriter );
 	    SDL_Delay(150);
 	    frames = frames + 1;
 	    if (frames >= 3)
@@ -472,7 +491,7 @@ int main ( int argc, char *argv[] )
 	  {
 	    rcupperr.x=rcsprite.x;
 	    rcupperr.y=rcsprite.y;
-	    SDL_BlitSurface(movr5, &upperr[frames] , screen, &rcupperr );
+	    SDL_BlitSurface(movr5, &upperr[frames] , screen, &rcspriter );
 	    SDL_Delay(150);
 	    frames = frames + 1;
 	    if (frames >= 3)
@@ -486,10 +505,19 @@ int main ( int argc, char *argv[] )
 	    SDL_BlitSurface(spriter, &apr , screen, &rcspriter );
 	  }
       }
-    
+	    
     if (sprx >= 950 || spry >= 20 )
       forward = 0;
     
+   
+    
+    if ( le == 1 || ri == 1 || uppercut == 1   && distance <= 30)
+      {
+	printf("collision!");
+	enn.pdv = enn.pdv -1 ;
+      }
+    if (enn.pdv > 0)
+      SDL_BlitSurface(enemis, &foe , screen, &rcfoe );
     /* update the screen */
     SDL_UpdateRect(screen, 0, 0, 0, 0);
   }
