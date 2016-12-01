@@ -5,12 +5,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#define Sleep(n) usleep(n)
 #define pusize_haut 100
 #define pusize_larg 90
 #include <math.h>
+#include "ennemi.h"
 
-SDL_TimerID timer;
+
 double sprx,spry,distance,d,f,dx,df ;
 int forward,kicks,uppercut,croush,jum,ri,le,frames=0;
 
@@ -24,10 +24,6 @@ struct personnage
 
 
 
-struct enemis
-{
-	int pdv;
-}enn;
 
 
 
@@ -111,11 +107,11 @@ void setupperr()
   
 int main ( int argc, char *argv[] )
 {
-  SDL_Surface *sprite , *temp , *screen, *pow, *mov0,*mov1,*mov2,*mov3,*mov4,*mov5,*mov6, *movr0,*movr1,*movr2,*movr3,*movr4,*movr5,*movr6,*spriter,*enemis;
+  SDL_Surface *sprite , *temp , *screen, *pow, *mov0,*mov1,*mov2,*mov3,*mov4,*mov5,*mov6, *movr0,*movr1,*movr2,*movr3,*movr4,*movr5,*movr6,*spriter,*enemis,*move0,*move1,*move2,*move3;
   int colorkey;
   /* initialize SDL */
   SDL_Init(SDL_INIT_VIDEO);
-
+  
   /* set the title bar */
   SDL_WM_SetCaption("fail fighter", "fail fighter");
 
@@ -128,88 +124,105 @@ int main ( int argc, char *argv[] )
   temp = SDL_LoadBMP("mission1.bmp");
   SDL_Surface* bg = SDL_DisplayFormat(temp);
   SDL_FreeSurface(temp);
-  /* load enemy */
-  temp   = SDL_LoadBMP("persods.bmp");
-  enemis = SDL_DisplayFormat(temp);
-  SDL_SetColorKey(enemis, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  /*load ennemy's sprite*/
+  temp   = SDL_LoadBMP("Ennemi_Walk.bmp");
+  move0 = SDL_DisplayFormat(temp);
+  SDL_SetColorKey(move0, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
+
+  temp   = SDL_LoadBMP("Ennemi_WalkR.bmp");
+  move1 = SDL_DisplayFormat(temp);
+  SDL_SetColorKey(move1, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_FreeSurface(temp);
+
+  temp   = SDL_LoadBMP("Kick.bmp");
+  move2 = SDL_DisplayFormat(temp);
+  SDL_SetColorKey(move2, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_FreeSurface(temp);
+
+
+  temp   = SDL_LoadBMP("Kickr.bmp");
+  move3 = SDL_DisplayFormat(temp);
+  SDL_SetColorKey(move3, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_FreeSurface(temp);
+
   /* load sprite */
-  temp   = SDL_LoadBMP("perso/static.bmp");
+  temp   = SDL_LoadBMP("static.bmp");
   sprite = SDL_DisplayFormat(temp);
   SDL_SetColorKey(sprite, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   /* character movements*/
-  temp   = SDL_LoadBMP("perso/jump.bmp");
+  temp   = SDL_LoadBMP("jump.bmp");
   mov0  = SDL_DisplayFormat(temp);
   SDL_SetColorKey(mov0, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // avancer
-  temp   = SDL_LoadBMP("perso/avancer.bmp");
+  temp   = SDL_LoadBMP("avancer.bmp");
   mov1  = SDL_DisplayFormat(temp);
   SDL_SetColorKey(mov1, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // kick
-  temp   = SDL_LoadBMP("perso/kick.bmp");
+  temp   = SDL_LoadBMP("kick.bmp");
   mov2  = SDL_DisplayFormat(temp);
   SDL_SetColorKey(mov2, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // left
-  temp   = SDL_LoadBMP("perso/left.bmp");
+  temp   = SDL_LoadBMP("left.bmp");
   mov3  = SDL_DisplayFormat(temp);
   SDL_SetColorKey(mov3, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // right
-  temp   = SDL_LoadBMP("perso/right.bmp");
+  temp   = SDL_LoadBMP("right.bmp");
   mov4  = SDL_DisplayFormat(temp);
   SDL_SetColorKey(mov4, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // uppercut
-  temp   = SDL_LoadBMP("perso/uppercut.bmp");
+  temp   = SDL_LoadBMP("uppercut.bmp");
   mov5  = SDL_DisplayFormat(temp);
   SDL_SetColorKey(mov5, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // crouch
-  temp   = SDL_LoadBMP("perso/bas.bmp");
+  temp   = SDL_LoadBMP("bas.bmp");
   mov6  = SDL_DisplayFormat(temp);
   SDL_SetColorKey(mov6, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
    /* load sprite */
-  temp   = SDL_LoadBMP("perso/staticr.bmp");
+  temp   = SDL_LoadBMP("staticr.bmp");
   spriter = SDL_DisplayFormat(temp);
   SDL_SetColorKey(spriter, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   /* character movements reverse*/
-  temp   = SDL_LoadBMP("perso/jump.bmp");
+  temp   = SDL_LoadBMP("jump.bmp");
   movr0  = SDL_DisplayFormat(temp);
   SDL_SetColorKey(movr0, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // avancer reverse 
-  temp   = SDL_LoadBMP("perso/avancerr.bmp");
+  temp   = SDL_LoadBMP("avancerr.bmp");
   movr1  = SDL_DisplayFormat(temp);
   SDL_SetColorKey(movr1, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // kick reverse 
-  temp   = SDL_LoadBMP("perso/kickr.bmp");
+  temp   = SDL_LoadBMP("kickr.bmp");
   movr2  = SDL_DisplayFormat(temp);
   SDL_SetColorKey(movr2, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // left reverse 
-  temp   = SDL_LoadBMP("perso/leftr.bmp");
+  temp   = SDL_LoadBMP("leftr.bmp");
   movr3  = SDL_DisplayFormat(temp);
   SDL_SetColorKey(movr3, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // right reverse
-  temp   = SDL_LoadBMP("perso/rightr.bmp");
+  temp   = SDL_LoadBMP("rightr.bmp");
   movr4  = SDL_DisplayFormat(temp);
   SDL_SetColorKey(movr4, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // uppercut reverse
-  temp   = SDL_LoadBMP("perso/uppercutr.bmp");
+  temp   = SDL_LoadBMP("uppercutr.bmp");
   movr5  = SDL_DisplayFormat(temp);
   SDL_SetColorKey(movr5, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
   // crouch reverse
-  temp   = SDL_LoadBMP("perso/basr.bmp");
+  temp   = SDL_LoadBMP("basr.bmp");
   movr6  = SDL_DisplayFormat(temp);
   SDL_SetColorKey(movr6, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
@@ -299,7 +312,6 @@ int main ( int argc, char *argv[] )
   setforwardr();
   setkickr();
   setupperr();
-  enn.pdv = 100;
   int gameover = 0;
   /* message pump */
   while (!gameover)
@@ -371,9 +383,6 @@ int main ( int argc, char *argv[] )
     SDL_BlitSurface(bg, NULL, screen, NULL);
     if (pers.right == 1)
       {
-	d = rcfoe.x - rcsprite.x;
-	f = rcfoe.y - rcsprite.y; 
-	distance = sqrt(d*d + f*f);
 	if (croush ==1)
 	  {
 	    rcbas.x=rcsprite.x;
@@ -394,8 +403,8 @@ int main ( int argc, char *argv[] )
 	  }
 	else if (forward ==1)
 	  {
-	    sprx = sprx + 35; 
-	    rcsprite.x = int (sprx);         //double convertion into int ...
+	   
+	    rcsprite.x = rcsprite.x + 35 ;
 	    rcfor.x=rcsprite.x;
 	    rcfor.y=rcsprite.y;
 	    SDL_BlitSurface(mov1, &forw[frames] , screen, &rcsprite );
@@ -461,10 +470,7 @@ int main ( int argc, char *argv[] )
 	  }
 	else if (forward == 1)
 	  {
-	    sprx = sprx - 35; 
-	    rcspriter.x = int (sprx);         //double convertion into int ...
-	    rcforr.x=rcspriter.x ;
-	    rcforr.y=rcsprite.y ;
+	    rcspriter.x =  rcspriter.x -35;  //double convertion into int 
 	    SDL_BlitSurface(movr1, &forwr[frames] , screen, &rcspriter );
 	    SDL_Delay(100);
 	    frames = frames + 1;
@@ -511,13 +517,7 @@ int main ( int argc, char *argv[] )
     
    
     
-    if ( le == 1 || ri == 1 || uppercut == 1   && distance <= 30)
-      {
-	printf("collision!");
-	enn.pdv = enn.pdv -1 ;
-      }
-    if (enn.pdv > 0)
-      SDL_BlitSurface(enemis, &foe , screen, &rcfoe );
+  
     /* update the screen */
     SDL_UpdateRect(screen, 0, 0, 0, 0);
   }

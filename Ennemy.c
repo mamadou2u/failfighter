@@ -1,8 +1,6 @@
 #include "SDL.h"
 #define esize_haut 80
 #define esize_larg 50
-#define nbr_anim 8
-#define temps_anim
 #define vit 20
 #include "time.h"
 
@@ -15,7 +13,7 @@ struct ennemi
   int left;
 }en;
 
-void setforward()
+void setforwarde()
 {
   forw[0].x=0;
   forw[0].y=0;
@@ -33,7 +31,7 @@ void setforward()
   forw[2].w = 187-116;
 } 
 
-void setforwardr()
+void setforwardre()
 {
   forwr[0].x=209;
   forwr[0].y=0;
@@ -51,7 +49,7 @@ void setforwardr()
   forwr[2].w = 70;
 } 
 
-void setkick()
+void setkicke()
 {
   forwk[0].x=0;
   forwk[0].y=0;
@@ -70,7 +68,7 @@ void setkick()
 
 }
 
-void setkickr()
+void setkickre()
 {
   forwkr[0].x=265;
   forwkr[0].y=0;
@@ -142,10 +140,10 @@ int main ( int argc, char *argv[] )
 
   SDL_Event event;
 
-  setforward();
-  setforwardr();
-  setkick();
-  setkickr();
+  setforwarde();
+  setforwardre();
+  setkicke();
+  setkickre();
   int gameover = 0;
   /* message pump */
   while (!gameover)
