@@ -6,8 +6,8 @@
 #define vit 20
 #include "time.h"
 
-SDL_Rect ap1 ,apr, rcsprite,rcspriter,rckick,forw[3],forwr[3],forwk[3];
-int i,forward,forwardr,rkick,frames=0;
+SDL_Rect ap1 ,apr, rcsprite,rcspriter,rckick,forw[3],forwr[3],forwk[3],forwkr[3];
+int i,forward,forwardr,rkick,rkickr,frames=0;
 double sprx;
 struct ennemi
 {
@@ -66,17 +66,32 @@ void setkick()
   forwk[2].x = 149;
   forwk[2].y = 0;
   forwk[2].h = esize_haut;
-  forwk[2].w = 103;
+  forwk[2].w = 102;
 
-  forwk[3].x=253;
-  forwk[3].y=0;
-  forwk[3].h=esize_haut;
-  forwk[3].w=71;
+}
+
+void setkickr()
+{
+  forwkr[0].x=265;
+  forwkr[0].y=0;
+  forwkr[0].h=esize_haut;
+  forwkr[0].w=57;
+ 
+  forwkr[1].x = 187;
+  forwkr[1].y = 0;
+  forwkr[1].h = esize_haut;
+  forwkr[1].w = 77;
+
+  forwkr[2].x = 87;
+  forwkr[2].y = 0;
+  forwkr[2].h = esize_haut;
+  forwkr[2].w = 105;
+
 }
 
 int main ( int argc, char *argv[] )
 {
-  SDL_Surface *sprite , *temp , *screen,*spriter,*kick;
+  SDL_Surface *sprite , *temp , *screen,*spriter,*kick,*kickr;
   int colorkey;
   /* initialize SDL */
   SDL_Init(SDL_INIT_VIDEO);
@@ -110,6 +125,12 @@ int main ( int argc, char *argv[] )
   SDL_SetColorKey(kick, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
 
+
+  temp   = SDL_LoadBMP("Kickr.bmp");
+  kickr = SDL_DisplayFormat(temp);
+  SDL_SetColorKey(kickr, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_FreeSurface(temp);
+
   /*charcater position*/
   
   rcsprite.x = 150 ;	
@@ -118,14 +139,13 @@ int main ( int argc, char *argv[] )
   rcspriter.x = 150 ;	
   rcspriter.y = 300 ;
 
-  rckick.x = rcsprite.x;
-  rckick.y = rcsprite.y;
 
   SDL_Event event;
 
   setforward();
   setforwardr();
   setkick();
+  setkickr();
   int gameover = 0;
   /* message pump */
   while (!gameover)
@@ -142,7 +162,7 @@ int main ( int argc, char *argv[] )
       case SDL_KEYUP:
 	forward=0;
 	forwardr=0;
-	rkick=0;
+
 	break;
         /* handle the keyboard */
       case SDL_KEYDOWN:
@@ -160,7 +180,12 @@ int main ( int argc, char *argv[] )
 	    forwardr=1;
 	    break;
 	  case SDLK_e:
-	    rkick=1;
+	    if(en.left==1)
+	      rkickr=1;
+	    else
+	      rkick=1;
+	    
+	    break;
 	  case SDLK_q:
               gameover = 1;
 	    break;
@@ -170,14 +195,16 @@ int main ( int argc, char *argv[] )
 
       }
     }
-    
+  
 
     /* draw the background */
     SDL_BlitSurface(bg, NULL, screen, NULL);
+  
 
-
-    if(en.right==1){
-      if(forward==1){
+    if(en.right==1)
+      {
+      if(forward==1)
+	{
 	rcsprite.x =rcsprite.x+vit;         //double convertion into int ...
 	rcspriter.x=rcsprite.x;
 	SDL_BlitSurface(sprite, &forw[frames] , screen, &rcsprite );
@@ -187,12 +214,11 @@ int main ( int argc, char *argv[] )
 	  {
 	    frames = 0 ;
 	  }
+	
+	}
+     
+	
       }
-      else
-	SDL_BlitSurface(sprite, &forw[0] , screen, &rcsprite );
-    }
-    
-    
   
     if(en.left==1){
       if(forwardr==1){
@@ -205,24 +231,54 @@ int main ( int argc, char *argv[] )
 	  {
 	    frames = 0 ;
 	  }
+
       }
     }
-    else 
-      SDL_BlitSurface(spriter, &forwr[0] , screen, &rcspriter );
- 
+    if( rkickr==1)
+      {
+	rckick.x=rcsprite.x;
+	rckick.y=rcsprite.y;
+	SDL_BlitSurface(kickr, &forwkr[frames] , screen, &rcspriter );
+	SDL_Delay(150);
+	frames = frames + 1;
+	if(frames==4)
+	  {
+	    
+	    frames = 0 ;
+	    rkickr=0;
+	  }
+      }
+    if( rkick==1)
+      {
+	rckick.x=rcsprite.x;
+	rckick.y=rcsprite.y;
+	SDL_BlitSurface(kick, &forwk[frames] , screen, &rcsprite );
+	SDL_Delay(150);
+	frames = frames + 1;
+	if(frames==5)
+	  {
+        
+	    frames = 0 ;
+	    rkick=0;
+	  }
+      }
   
-  
-
-  if(en.right==0 && en.left==0)
-    SDL_BlitSurface(sprite, &forw[0] , screen, &rcsprite );
-
+    if(forward==0 && forwardr==0 && rkick==0 && rkickr==0){
+      if(en.left==1)
+	SDL_BlitSurface(spriter, &forwr[0] , screen, &rcspriter );
+      else if (en.right==1)
+	SDL_BlitSurface(sprite, &forw[0] , screen, &rcsprite );
+      else
+	SDL_BlitSurface(sprite, &forw[0] , screen, &rcsprite );
+    }
 
   
 
   
   /* update the screen */
   SDL_UpdateRect(screen, 0, 0, 0, 0);
-  
+      
+  }
   /* free the background surface */
   SDL_FreeSurface(bg);
   SDL_FreeSurface(sprite);
@@ -231,5 +287,5 @@ int main ( int argc, char *argv[] )
   
   return 0;
   
-  }
 }
+
