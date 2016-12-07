@@ -1,7 +1,6 @@
 #ifndef ENNEMI_H
 #define ENNEMI_H
-#define esize_haut 80
-int  frame=0;
+
 struct ennemi
 {
   int right;

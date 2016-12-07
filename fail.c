@@ -1,28 +1,178 @@
 
 #include "SDL.h"
-#define vit 50
 #include "time.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#define vit 50
 #define pusize_haut 100
 #define pusize_larg 90
+#define esize_haut 80
+int  frame=0;
 #include <math.h>
-#include "ennemi.h"
 
 
 double sprx,spry,distance,d,f,dx,df ;
 int forward,kicks,uppercut,croush,jum,ri,le,frames=0;
 
-SDL_Rect ap1 , rcsprite ,left,rcleft,right,rcright,rcfor,forw[3],forwr[3],upperr[2],upper[2],rcupper,kick[2],rckick,jump,rcjump,bas,rcbas,rcupperr,rckickr,kickr[2],rcforr,rightr,rcrightr,leftr,rcleftr,basr,rcbasr,apr,rcspriter,foe,rcfoe;
+SDL_Rect ap1 , rcsprite ,rcspritee,rcspritere,rckicke,forwe[3],forwer[3],forwk[3],forwkr[3],left,rcleft,right,rcright,rcfor,forw[3],forwr[3],upperr[2],upper[2],rcupper,kick[2],rckick,jump,rcjump,bas,rcbas,rcupperr,rckickr,kickr[2],rcforr,rightr,rcrightr,leftr,rcleftr,basr,rcbasr,apr,rcspriter,foe,rcfoe;
 struct personnage 
 {
   int pdv;
   int right;//direction du personnage
   int left;
 }pers;
+/* ***********************************************************************ENEMY ET IA**************************************************************************************************************** */
+struct ennemi
+{
+   int pdv;
+   int left;
+   int right;
+}enn;
+void setstatic()
+{
+  rcspritee.x = 150 ;	
+  rcspritee.y = 300 ;
+  rcspritere.x = 650 ;	
+  rcspritere.y = 311 ;
+}
+void fonckicke(SDL_Surface *scr , SDL_Surface *image)
+  {
+    SDL_BlitSurface(image, &forwk[frame] , scr, &rcspritee );
+    SDL_Delay(150);
+    frame = frame + 1;
+    if(frame==5)
+      {
+	
+	frame = 0 ;
+      }
+  }
+  void fonckickre(SDL_Surface *scr , SDL_Surface *image )
+  {
+    
+    SDL_BlitSurface(image, &forwkr[frame] , scr, &rcspritere) ;
+    SDL_Delay(150);
+    frame = frame + 1;
+    if(frame==4)
+      {
+	
+	frame = 0 ;
+      }
+    
+  }
+ void foncforwarde (SDL_Surface *scr , SDL_Surface *image)
+ {
+   
+   rcspritee.x =rcspritee.x+vit;         //double convertion into int ...
+   rcspritere.x=rcspritee.x;
+   SDL_BlitSurface(image, &forwe[frame] , scr, &rcspritee );
+   SDL_Delay(150);
+   frame = frame + 1;
+   if(frame==2)
+     {
+       frame = 0 ;
+     }
+   
+ }
 
+void foncforwardre(SDL_Surface *scr , SDL_Surface *image)
+ {
+   rcspritere.x =rcspritere.x-vit;         //double convertion into int ...
+   rcspritee.x=rcspritere.x;
+   SDL_BlitSurface(image, &forwer[frame] , scr, &rcspritere);
+   SDL_Delay(150);
+   frame = frame + 1;
+   if(frame==2)
+     {
+       frame = 0 ;
+     }
+   
+ }
+ 
+ void foncstatic(SDL_Surface *scr , SDL_Surface *image)
+ {
+   SDL_BlitSurface(image, &forwer[0] , scr, &rcspritere );
+ }
+ 
+ void foncstaticr(SDL_Surface *scr , SDL_Surface *image)
+ {
+   SDL_BlitSurface(image, &forwe[0] , scr, &rcspritee );
+ }
+void setforwarde()
+{
+  forwe[0].x=0;
+  forwe[0].y=0;
+  forwe[0].h=esize_haut;
+  forwe[0].w=57;
 
+  forwe[1].x = 57;
+  forwe[1].y = 0;
+  forwe[1].h = esize_haut;
+  forwe[1].w = 116-57;
+
+  forwe[2].x = 116;
+  forwe[2].y = 0;
+  forwe[2].h = esize_haut;
+  forwe[2].w = 187-116;
+} 
+
+void setforwardre()
+{
+  forwer[0].x=209;
+  forwer[0].y=0;
+  forwer[0].h=esize_haut;
+  forwer[0].w=59;
+ 
+  forwer[1].x = 150;
+  forwer[1].y = 0;
+  forwer[1].h = esize_haut;
+  forwer[1].w = 70;
+
+  forwer[2].x = 75;
+  forwer[2].y = 0;
+  forwer[2].h = esize_haut;
+  forwer[2].w = 70;
+} 
+
+void setkicke()
+{
+  forwk[0].x=0;
+  forwk[0].y=0;
+  forwk[0].h=esize_haut;
+  forwk[0].w=70;
+ 
+  forwk[1].x = 73;
+  forwk[1].y = 0;
+  forwk[1].h = esize_haut;
+  forwk[1].w = 77;
+
+  forwk[2].x = 149;
+  forwk[2].y = 0;
+  forwk[2].h = esize_haut;
+  forwk[2].w = 102;
+
+}
+
+void setkickre()
+{
+  forwkr[0].x=265;
+  forwkr[0].y=0;
+  forwkr[0].h=esize_haut;
+  forwkr[0].w=57;
+ 
+  forwkr[1].x = 187;
+  forwkr[1].y = 0;
+  forwkr[1].h = esize_haut;
+  forwkr[1].w = 77;
+
+  forwkr[2].x = 87;
+  forwkr[2].y = 0;
+  forwkr[2].h = esize_haut;
+  forwkr[2].w = 105;
+
+}
+
+/* ***************************************************************************************************************************************************************** */
 
 
 
@@ -304,7 +454,12 @@ int main ( int argc, char *argv[] )
   apr.h = pusize_haut;
   apr.w = pusize_larg;
   
+
   SDL_Event event;
+  setstatic();
+  setforwardre();
+  setforwarde();
+  
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
   setforward();
   setkick();
@@ -312,6 +467,7 @@ int main ( int argc, char *argv[] )
   setforwardr();
   setkickr();
   setupperr();
+  foncstaticr(screen,move1);
   int gameover = 0;
   /* message pump */
   while (!gameover)
@@ -387,19 +543,19 @@ int main ( int argc, char *argv[] )
 	  {
 	    rcbas.x=rcsprite.x;
 	    rcbas.y=rcsprite.y;
-	    SDL_BlitSurface(mov6, &bas , screen, &rcbas );	  
+	    SDL_BlitSurface(mov6, &bas , screen, &rcsprite );	  
 	  }
 	else if (le == 1)
 	  {
 	    rcleft.x=rcsprite.x;
 	    rcleft.y=rcsprite.y;
-	    SDL_BlitSurface(mov3, &left , screen, &rcleft );
+	    SDL_BlitSurface(mov3, &left , screen, &rcsprite );
 	  }
 	else if (ri == 1 )
 	  {
 	    rcright.x=rcsprite.x;
 	    rcright.y=rcsprite.y;
-	    SDL_BlitSurface(mov4, &left , screen, &rcright );
+	    SDL_BlitSurface(mov4, &left , screen, &rcsprite );
 	  }
 	else if (forward ==1)
 	  {
@@ -470,7 +626,8 @@ int main ( int argc, char *argv[] )
 	  }
 	else if (forward == 1)
 	  {
-	    rcspriter.x =  rcspriter.x -35;  //double convertion into int 
+	    rcsprite.x =  rcsprite.x -35;  //double convertion into int
+	    rcspriter.x = rcsprite.x;
 	    SDL_BlitSurface(movr1, &forwr[frames] , screen, &rcspriter );
 	    SDL_Delay(100);
 	    frames = frames + 1;
@@ -511,12 +668,12 @@ int main ( int argc, char *argv[] )
 	    SDL_BlitSurface(spriter, &apr , screen, &rcspriter );
 	  }
       }
-	    
+    
     if (sprx >= 950 || spry >= 20 )
       forward = 0;
     
    
-    
+     SDL_BlitSurface(move1, &forwer[0] , screen, &rcspritere );
   
     /* update the screen */
     SDL_UpdateRect(screen, 0, 0, 0, 0);

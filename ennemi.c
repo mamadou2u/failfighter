@@ -1,6 +1,35 @@
 #include "SDL.h"
 #include "ennemi.h"
+#define vit 50
 
+
+
+
+SDL_Rect 
+SDL_Surface *move0 , *move1 , *move2 , *move3;
+/* setup sprite colorkey and turn on RLE */
+colorkey = SDL_MapRGB(screen->format, 255 , 255 , 255);
+  /*load ennemy's sprite*/
+  temp   = SDL_LoadBMP("Ennemi_Walk.bmp");
+  move0 = SDL_DisplayFormat(temp);			
+  SDL_SetColorKey(move0, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_FreeSurface(temp);
+
+  temp   = SDL_LoadBMP("Ennemi_WalkR.bmp");
+  move1 = SDL_DisplayFormat(temp);
+  SDL_SetColorKey(move1, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_FreeSurface(temp);
+
+  temp   = SDL_LoadBMP("Kick.bmp");
+  move2 = SDL_DisplayFormat(temp);
+  SDL_SetColorKey(move2, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_FreeSurface(temp);
+
+
+  temp   = SDL_LoadBMP("Kickr.bmp");
+  move3 = SDL_DisplayFormat(temp);
+  SDL_SetColorKey(move3, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_FreeSurface(temp);
 SDL_Rect  rcspritee,rcspritere,rckicke,forwe[3],forwer[3],forwk[3],forwkr[3];
 void setstatic()
 {
@@ -85,7 +114,7 @@ void setkickre()
 }
 void fonckicke()
 {
-  SDL_BlitSurface(move2, &forwk[frames] , screen, &rcspritee );
+  SDL_BlitSurface(move2, &forwk[frame] , screen, &rcspritee );
   SDL_Delay(150);
   frame = frame + 1;
   if(frame==5)
@@ -98,7 +127,7 @@ void fonckicke()
 void fonckickre()
 {
   
-  SDL_BlitSurface(move3, &forwkr[frames] , screen, &rcspritere) ;
+  SDL_BlitSurface(move3, &forwkr[frame] , screen, &rcspritere) ;
   SDL_Delay(150);
   frame = frame + 1;
   if(frame==4)
@@ -114,12 +143,12 @@ void foncforwarde ()
   
   rcspritee.x =rcspritee.x+vit;         //double convertion into int ...
   rcspritere.x=rcspritee.x;
-  SDL_BlitSurface(move0, &forw[frames] , screen, &rcspritee );
+  SDL_BlitSurface(move0, &forwe[frame] , screen, &rcspritee );
   SDL_Delay(150);
   frame = frame + 1;
   if(frame==2)
     {
-      frames = 0 ;
+      frame = 0 ;
     }
   
 }
@@ -128,7 +157,7 @@ void foncforwardre()
 {
   rcspritere.x =rcspritere.x-vit;         //double convertion into int ...
   rcspritee.x=rcspritere.x;
-  SDL_BlitSurface(move1, &forwr[frames] , screen, &rcspritere);
+  SDL_BlitSurface(move1, &forwer[frame] , screen, &rcspritere);
   SDL_Delay(150);
   frame = frame + 1;
   if(frame==2)
@@ -140,10 +169,10 @@ void foncforwardre()
 
 void foncstatic()
 {
-  SDL_BlitSurface(move0, &forwr[0] , screen, &rcspritere );
+  SDL_BlitSurface(move0, &forwer[0] , screen, &rcspritere );
 }
 
 void fonstaticr()
 {
-  SDL_BlitSurface(move1, &forw[0] , screen, &rcspritee );
+  SDL_BlitSurface(move1, &forwe[0] , screen, &rcspritee );
 }
