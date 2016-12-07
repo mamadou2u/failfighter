@@ -62,7 +62,6 @@ void fonckicke(SDL_Surface *scr , SDL_Surface *image)
   }
  void foncforwarde (SDL_Surface *scr , SDL_Surface *image)
  {
-   
    rcspritee.x =rcspritee.x+vit;         //double convertion into int ...
    rcspritere.x=rcspritee.x;
    SDL_BlitSurface(image, &forwe[frame] , scr, &rcspritee );
@@ -72,9 +71,8 @@ void fonckicke(SDL_Surface *scr , SDL_Surface *image)
      {
        frame = 0 ;
      }
-   
+       
  }
-
 void foncforwardre(SDL_Surface *scr , SDL_Surface *image)
  {
    rcspritere.x =rcspritere.x-vit;         //double convertion into int ...
@@ -464,10 +462,10 @@ int main ( int argc, char *argv[] )
   setforward();
   setkick();
   setupper();
-  setforwardr();
+  //setforwardr();
   setkickr();
   setupperr();
-  foncstaticr(screen,move1);
+  //foncstaticr(screen,move1);
   int gameover = 0;
   /* message pump */
   while (!gameover)
@@ -673,7 +671,7 @@ int main ( int argc, char *argv[] )
       forward = 0;
     
    
-     SDL_BlitSurface(move1, &forwer[0] , screen, &rcspritere );
+    SDL_BlitSurface(move1, &forwer[0] , screen, &rcspritere );
   
     /* update the screen */
     SDL_UpdateRect(screen, 0, 0, 0, 0);
