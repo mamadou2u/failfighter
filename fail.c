@@ -652,7 +652,7 @@ int main ( int argc, char *argv[] )
       }
      /* ****************************************************Fin Walk Ennemi *************************************************************** */ 
 
-    if(rcspritere.x-rcsprite.x>0 && rcspritere.x-rcsprite.x<80)
+    if(rcspritere.x-rcsprite.x>=0 && rcspritere.x-rcsprite.x<=80)
       {
 
 	SDL_BlitSurface(move3, &forwkr[frame] , screen,&rcspritee);
@@ -663,7 +663,7 @@ int main ( int argc, char *argv[] )
       }
 
     
-    if(rcspritere.x-rcsprite.x>-70 && rcspritere.x-rcsprite.x<0)
+    if(rcspritere.x-rcsprite.x>=-70 && rcspritere.x-rcsprite.x<=0)
       {
 
 	SDL_BlitSurface(move2, &forwk[frame] , screen,&rcspritee);
@@ -672,8 +672,16 @@ int main ( int argc, char *argv[] )
 	if (frame >= 5)
 	  frame = 0;
       }
+    /* position personnage de base*/
+    if(pers.left==1 && forward==0 && kicks==0 && le==0 && ri == 0 && uppercut==0 && croush==0)
+      SDL_BlitSurface(spriter, &apr , screen, &rcspriter);
+    else if(forward==0 && kicks==0 && le==0 && ri == 0 && uppercut==0 && croush==0)
+      SDL_BlitSurface(sprite, &ap1 , screen, &rcsprite );
 
-    //SDL_BlitSurface(move1, &forwer[0] , screen, &rcspritere );
+
+
+
+    /*affichage personnage ennemis */
      if( rcspritere.x-rcsprite.x<=125 && rcspritere.x-rcsprite.x>=75 )
       SDL_BlitSurface(move1, &forwer[0] , screen, &rcspritere );
      else if (rcspritere.x-rcsprite.x>=-125 && rcspritere.x-rcsprite.x<=-75)
