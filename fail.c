@@ -45,9 +45,9 @@ void MENU (SDL_Surface *screen) //Nouveau menu
 }
 
 double sprx,spry,distance,d,f,dx,df ;
-int forward,kicks,kickEnn,kickEnnR,uppercut,croush,jum,ri,le,frames=0;
+int forward,kicks,kickEnn,kickEnnR,uppercut,croush,jum,ri,le,frames=0,mort;
 
-SDL_Rect ap1 , rcsprite ,rcspritee,rcspritere,rckicke,forwe[3],forwer[3],forwk[3],forwkr[3],left,rcleft,right,rcright,rcfor,forw[3],forwr[3],upperr[2],upper[2],rcupper,kick[2],rckick,jump,rcjump,bas,rcbas,rcupperr,rckickr,kickr[2],rcforr,rightr,rcrightr,leftr,rcleftr,basr,rcbasr,apr,rcspriter,foe,rcfoe;
+SDL_Rect ap1 , rcsprite ,rcspritee,rcspritere,rckicke,forwe[3],forwer[3],forwk[3],forwkr[3],left,rcleft,right,rcright,rcfor,forw[3],forwr[3],upperr[2],upper[2],rcupper,kick[2],rckick,jump,rcjump,bas,rcbas,rcupperr,rckickr,kickr[2],rcforr,rightr,rcrightr,leftr,rcleftr,basr,rcbasr,apr,rcspriter,foe,rcfoe,dead[4];
 struct personnage 
 {
   int pdv;
@@ -149,6 +149,25 @@ void setkickre()
 
 
 
+void setdead()
+{
+  dead[0].x=0;
+  dead[0].y=0;
+  dead[0].h= pusize_haut;
+  dead[0].w=48;
+  dead[1].x=48;
+  dead[1].y=0;
+  dead[1].h= pusize_haut;
+  dead[1].w=50;
+  dead[2].x=98;
+  dead[2].y=0;
+  dead[2].h= pusize_haut;
+  dead[2].w=68;
+  dead[3].x=166;
+  dead[3].y=0;
+  dead[3].h= pusize_haut;
+  dead[3].w=70;
+}
 
 void setforward()
 {
@@ -230,7 +249,7 @@ void setupperr()
   
 int main ( int argc, char *argv[] )
 {
-  SDL_Surface *sprite , *temp , *screen, *pow, *mov0,*mov1,*mov2,*mov3,*mov4,*mov5,*mov6, *movr0,*movr1,*movr2,*movr3,*movr4,*movr5,*movr6,*spriter,*enemis,*move0,*move1,*move2,*move3;
+  SDL_Surface *sprite , *temp , *screen, *pow, *mov0,*mov1,*mov2,*mov3,*mov4,*mov5,*mov6,*mov7, *movr0,*movr1,*movr2,*movr3,*movr4,*movr5,*movr6,*spriter,*enemis,*move0,*move1,*move2,*move3;
   int colorkey;
   /* initialize SDL */
   SDL_Init(SDL_INIT_VIDEO);
@@ -309,6 +328,12 @@ int main ( int argc, char *argv[] )
   mov6  = SDL_DisplayFormat(temp);
   SDL_SetColorKey(mov6, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
   SDL_FreeSurface(temp);
+  // dead animation
+  temp   = SDL_LoadBMP("mort.bmp");
+  mov7  = SDL_DisplayFormat(temp);
+  SDL_SetColorKey(mov7, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
+  SDL_FreeSurface(temp);
+  
    /* load sprite */
   temp   = SDL_LoadBMP("staticr.bmp");
   spriter = SDL_DisplayFormat(temp);
@@ -451,6 +476,7 @@ int main ( int argc, char *argv[] )
   setforwardr();
   setkickr();
   setupperr();
+  setdead();
   int gameover = 0;
   /* message pump */
   while (!gameover)
@@ -520,6 +546,9 @@ int main ( int argc, char *argv[] )
     /* draw the background */
     
     SDL_BlitSurface(bg, NULL, screen, NULL);
+    if (pers.pdv <= 0)
+      mort= 1;
+    
     if (pers.right == 1)
       {
 	if (croush ==1)
@@ -582,6 +611,12 @@ int main ( int argc, char *argv[] )
 		frames = 0 ;
 	      }
 
+	  }
+	else if (mort == 1)
+	  {
+	    SDL_BlitSurface(mov7, &dead[frames] , screen,&rcsprite);
+	    SDL_Delay(100);
+	    frames++;
 	  }
 	else
 	  SDL_BlitSurface(sprite, &ap1 , screen, &rcsprite );
@@ -656,7 +691,7 @@ int main ( int argc, char *argv[] )
 
 
     /* ****************************************************ENNEMI**************************************************************/
-    if((    rcspritere.x-rcsprite.x>125 ))
+    if((    rcspritere.x-rcsprite.x>125 && mort==0 ))
       {
 	rcspritere.x =rcspritere.x-15;         //double convertion into int ...
 	rcspritee.x=rcspritere.x;
@@ -671,7 +706,7 @@ int main ( int argc, char *argv[] )
 	    frame = 0 ;
 	  }
       }
-    if(rcspritere.x-rcsprite.x<-125)      
+    if(rcspritere.x-rcsprite.x<-125 && mort ==0)      
       {
 	rcspritere.x =rcspritere.x+15;        //double convertion into int ...
 	rcspritee.x=rcspritere.x;
@@ -718,12 +753,20 @@ int main ( int argc, char *argv[] )
 	  }
 	  
       }
-    /* position personnage de base*/
-    if(pers.left==1 && forward==0 && kicks==0 && le==0 && ri == 0 && uppercut==0 && croush==0)
-      SDL_BlitSurface(spriter, &apr , screen, &rcspriter);
-    else if(forward==0 && kicks==0 && le==0 && ri == 0 && uppercut==0 && croush==0)
-      SDL_BlitSurface(sprite, &ap1 , screen, &rcsprite );
 
+
+
+
+    
+      
+    /* position personnage de base*/
+    if(pers.left==1 && forward==0 && kicks==0 && le==0 && ri == 0 && uppercut==0 && croush==0 && mort ==0)
+      SDL_BlitSurface(spriter, &apr , screen, &rcspriter);
+    else if(forward==0 && kicks==0 && le==0 && ri == 0 && uppercut==0 && croush==0 && mort == 0)
+      SDL_BlitSurface(sprite, &ap1 , screen, &rcsprite );
+    else if ( pers.pdv <= 0)
+      SDL_BlitSurface(mov7, &dead[3] , screen, &rcsprite );
+      
 
 
 
@@ -733,7 +776,7 @@ int main ( int argc, char *argv[] )
      else if (rcspritere.x-rcsprite.x>=-125 && rcspritere.x-rcsprite.x<=-70)
       SDL_BlitSurface(move0, &forwe [0] , screen, &rcspritere );
    
-
+     printf("mort%d\n",mort);
 
     /* update the screen */
     SDL_UpdateRect(screen, 0, 0, 0, 0);
