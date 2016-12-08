@@ -566,8 +566,7 @@ int main ( int argc, char *argv[] )
 		kicks = 0 ;
 		frames = 0 ;
 	      }	
-	    enn.pdv = enn.pdv - 10;
-	    printf("%d",enn.pdv);
+
 	  }
 	
 	else if (uppercut == 1)
@@ -582,8 +581,7 @@ int main ( int argc, char *argv[] )
 		uppercut = 0 ;
 		frames = 0 ;
 	      }
-	    enn.pdv = enn.pdv - 10;
-	    printf("%d",enn.pdv);
+
 	  }
 	else
 	  SDL_BlitSurface(sprite, &ap1 , screen, &rcsprite );
@@ -691,19 +689,19 @@ int main ( int argc, char *argv[] )
 
     if(rcspritere.x-rcsprite.x>=0 && rcspritere.x-rcsprite.x<=80)
       {
-
+	printf("%d",pers.pdv);
 	SDL_BlitSurface(move3, &forwkr[frame] , screen,&rcspritee);
 	SDL_Delay(100);
 	frame++;
 	if (frame >= 5)
 	  {
 	    frame = 0;
+	    pers.pdv = pers.pdv - 10;
 	    SDL_Delay(200);
 	  }
-	pers.pdv = pers.pdv - 20;
-	printf("%d",pers.pdv);
 	  
       }
+    
 
     
     if(rcspritere.x-rcsprite.x>=-70 && rcspritere.x-rcsprite.x<=0)
@@ -713,9 +711,12 @@ int main ( int argc, char *argv[] )
 	SDL_Delay(100);
 	frame++;
 	if (frame >= 5)
+	  {
 	  frame = 0;
-	pers.pdv = pers.pdv - 20;
-	printf("%d",pers.pdv);
+	  pers.pdv = pers.pdv - 10;
+	  SDL_Delay(200);
+	  }
+	  
       }
     /* position personnage de base*/
     if(pers.left==1 && forward==0 && kicks==0 && le==0 && ri == 0 && uppercut==0 && croush==0)
