@@ -44,6 +44,59 @@ void MENU (SDL_Surface *screen) //Nouveau menu
 	  }
 }
 
+void GAME_OVER_l(SDL_Surface *screen)
+{
+  SDL_Surface *temp, *tempbu;
+  SDL_Surface *Background = NULL, *text1=NULL, *button;
+  SDL_Rect position, positionButton;
+  SDL_Event evenement;
+  int compteur = 1;
+
+  temp = SDL_LoadBMP("lose.bmp");
+  Background = SDL_DisplayFormat(temp);
+  SDL_FreeSurface(temp);
+  position.x = 0;
+  position.y = 0;
+  SDL_BlitSurface(Background, NULL, screen, NULL);
+  SDL_UpdateRect(screen, 0, 0, 0, 0);
+
+  while( compteur != 0 )
+    {
+      SDL_WaitEvent(&evenement);
+      if(evenement.key.keysym.sym == SDLK_ESCAPE || evenement.key.keysym.sym == SDLK_q)
+	{
+	  compteur = 0;
+	}
+      SDL_FreeSurface;
+    }
+}
+ void GAME_OVER_w(SDL_Surface *screen)
+{
+  SDL_Surface *temp, *tempbu;
+  SDL_Surface *Background = NULL, *text1=NULL, *button;
+  SDL_Rect position, positionButton;
+  SDL_Event evenement;
+  int compteur = 1;
+
+  temp = SDL_LoadBMP("win.bmp");
+  Background = SDL_DisplayFormat(temp);
+  SDL_FreeSurface(temp);
+  position.x = 0;
+  position.y = 0;
+  SDL_BlitSurface(Background, NULL, screen, NULL);
+  SDL_UpdateRect(screen, 0, 0, 0, 0);
+
+  while( compteur != 0 )
+    {
+      SDL_WaitEvent(&evenement);
+      if(evenement.key.keysym.sym == SDLK_ESCAPE || evenement.key.keysym.sym == SDLK_q)
+	{
+	  compteur = 0;
+	}
+      SDL_FreeSurface;
+    }
+}	
+
 double sprx,spry,distance,d,f,dx,df ;
 int forward,kicks,kickEnn,kickEnnR,uppercut,croush,jum,ri,le,frames=0,mort,mortE;
 
@@ -623,10 +676,16 @@ int main ( int argc, char *argv[] )
     
     SDL_BlitSurface(bg, NULL, screen, NULL);
     if (pers.pdv <= 0)
-      mort= 1;
+      {
+	mort= 1;
+	//	GAME_OVER_l(screen);
+      }
+	
     if (enn.pdv <= 0)
-      mortE= 1;
-    
+      {
+	mortE= 1;
+	GAME_OVER_w(screen);
+      }
     if (pers.right == 1)
       {
 	if (croush ==1)
@@ -699,6 +758,10 @@ int main ( int argc, char *argv[] )
 	    SDL_BlitSurface(mov7, &dead[frames] , screen,&rcsprite);
 	    SDL_Delay(100);
 	    frames++;
+	    if (frames == 5)
+	      {
+		GAME_OVER_l(screen);
+	      }
 	  }
 	else
 	  SDL_BlitSurface(sprite, &ap1 , screen, &rcsprite );
@@ -771,6 +834,10 @@ int main ( int argc, char *argv[] )
 	    SDL_BlitSurface(movr7, &deadr[frames] , screen,&rcspriter);
 	    SDL_Delay(100);
 	    frames++;
+	    if (frames == 5)
+	      {
+		GAME_OVER_l(screen);
+	      }
 	  }
 	else
 	  {
