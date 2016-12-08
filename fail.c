@@ -660,6 +660,7 @@ int main ( int argc, char *argv[] )
 	frame++;
 	if (frame >= 5)
 	  frame = 0;
+	  
       }
 
     
@@ -682,9 +683,9 @@ int main ( int argc, char *argv[] )
 
 
     /*affichage personnage ennemis */
-     if( rcspritere.x-rcsprite.x<=125 && rcspritere.x-rcsprite.x>=75 )
+     if( rcspritere.x-rcsprite.x<=125 && rcspritere.x-rcsprite.x>=80 )
       SDL_BlitSurface(move1, &forwer[0] , screen, &rcspritere );
-     else if (rcspritere.x-rcsprite.x>=-125 && rcspritere.x-rcsprite.x<=-75)
+     else if (rcspritere.x-rcsprite.x>=-125 && rcspritere.x-rcsprite.x<=-70)
       SDL_BlitSurface(move0, &forwe [0] , screen, &rcspritere );
    
 
