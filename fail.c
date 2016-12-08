@@ -11,6 +11,38 @@
 int  frame=0;
 #include <math.h>
 
+void MENU (SDL_Surface *screen) //Nouveau menu 
+{
+        int compteur ; 
+	SDL_Surface *temp;
+	SDL_Surface *Background, *Arrow;
+	SDL_Rect position;
+	SDL_Event event;
+	//Load Background
+	temp = SDL_LoadBMP("logo.bmp");
+	Background = SDL_DisplayFormat(temp);
+	SDL_FreeSurface(temp);
+      	
+	compteur = 1;
+	position.x = 0 ;
+	position.y = 0  ;
+
+	SDL_BlitSurface (Background,NULL,screen,&position); // background display
+	SDL_UpdateRect(screen, 0, 0, 0, 0);
+	while( compteur != 0 )
+	  {
+	    SDL_WaitEvent(&event);
+	    if(event.key.keysym.sym == SDLK_SPACE)     
+	      {     /*Evenement quit or Continue*/
+		compteur = 0;
+
+	      }
+	    if(event.key.keysym.sym == SDLK_q)     
+	      {
+		SDL_Quit();
+	      }
+	  }
+}
 
 double sprx,spry,distance,d,f,dx,df ;
 int forward,kicks,kickEnn,kickEnnR,uppercut,croush,jum,ri,le,frames=0;
@@ -403,12 +435,13 @@ int main ( int argc, char *argv[] )
   apr.h = pusize_haut;
   apr.w = pusize_larg;
   
-
+  MENU(screen);
   SDL_Event event;
   setstatic();
   setforwardre();
   setforwarde();
-  
+  enn.pdv = 200;
+  pers.pdv = 200;
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
   setforward();
   setkick();
@@ -533,6 +566,8 @@ int main ( int argc, char *argv[] )
 		kicks = 0 ;
 		frames = 0 ;
 	      }	
+	    enn.pdv = enn.pdv - 10;
+	    printf("%d",enn.pdv);
 	  }
 	
 	else if (uppercut == 1)
@@ -547,6 +582,8 @@ int main ( int argc, char *argv[] )
 		uppercut = 0 ;
 		frames = 0 ;
 	      }
+	    enn.pdv = enn.pdv - 10;
+	    printf("%d",enn.pdv);
 	  }
 	else
 	  SDL_BlitSurface(sprite, &ap1 , screen, &rcsprite );
@@ -659,7 +696,12 @@ int main ( int argc, char *argv[] )
 	SDL_Delay(100);
 	frame++;
 	if (frame >= 5)
-	  frame = 0;
+	  {
+	    frame = 0;
+	    SDL_Delay(200);
+	  }
+	pers.pdv = pers.pdv - 20;
+	printf("%d",pers.pdv);
 	  
       }
 
@@ -672,6 +714,8 @@ int main ( int argc, char *argv[] )
 	frame++;
 	if (frame >= 5)
 	  frame = 0;
+	pers.pdv = pers.pdv - 20;
+	printf("%d",pers.pdv);
       }
     /* position personnage de base*/
     if(pers.left==1 && forward==0 && kicks==0 && le==0 && ri == 0 && uppercut==0 && croush==0)
