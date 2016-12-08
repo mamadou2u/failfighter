@@ -47,7 +47,7 @@ void MENU (SDL_Surface *screen) //Nouveau menu
 double sprx,spry,distance,d,f,dx,df ;
 int forward,kicks,kickEnn,kickEnnR,uppercut,croush,jum,ri,le,frames=0,mort;
 
-SDL_Rect ap1 , rcsprite ,rcspritee,rcspritere,rckicke,forwe[3],forwer[3],forwk[3],forwkr[3],left,rcleft,right,rcright,rcfor,forw[3],forwr[3],upperr[2],upper[2],rcupper,kick[2],rckick,jump,rcjump,bas,rcbas,rcupperr,rckickr,kickr[2],rcforr,rightr,rcrightr,leftr,rcleftr,basr,rcbasr,apr,rcspriter,foe,rcfoe,dead[4],deadr[4];
+SDL_Rect ap1 , rcsprite ,rcspritee,rcspritere,rckicke,forwe[3],forwer[3],forwk[3],forwkr[3],left,rcleft,right,rcright,rcfor,forw[3],forwr[3],upperr[2],upper[2],rcupper,kick[2],rckick,jump,rcjump,bas,rcbas,rcupperr,rckickr,kickr[2],rcforr,rightr,rcrightr,leftr,rcleftr,basr,rcbasr,apr,rcspriter,foe,rcfoe,dead[4],deade[4],deaden[4];
 struct personnage 
 {
   int pdv;
@@ -167,6 +167,46 @@ void setdead()
   dead[3].y=0;
   dead[3].h= pusize_haut;
   dead[3].w=70;
+}
+
+void setmort()
+{
+  deade[0].x=372;
+  deade[0].y=0;
+  deade[0].h= pusize_haut;
+  deade[0].w=63;
+  deade[1].x=261;
+  deade[1].y=0;
+  deade[1].h= pusize_haut;
+  deade[1].w=111;
+  deade[2].x=134;
+  deade[2].y=0;
+  deade[2].h= pusize_haut;
+  deade[2].w=127;
+  deade[3].x=0;
+  deade[3].y=0;
+  deade[3].h= pusize_haut;
+  deade[3].w=127;
+}
+
+void setmortn()
+{
+  deade[0].x=0;
+  deade[0].y=0;
+  deade[0].h= pusize_haut;
+  deade[0].w=61;
+  deade[1].x=61;
+  deade[1].y=0;
+  deade[1].h= pusize_haut;
+  deade[1].w=111;
+  deade[2].x=172;
+  deade[2].y=0;
+  deade[2].h= pusize_haut;
+  deade[2].w=127;
+  deade[3].x=300;
+  deade[3].y=0;
+  deade[3].h= pusize_haut;
+  deade[3].w=132;
 }
 
 void setforward()
